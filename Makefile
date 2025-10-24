@@ -20,7 +20,8 @@ ALIGNSCORE_BATCH_SIZE ?= 8
 
 run: install
 	@echo "Running AlignScore service at http://$(HOST):$(PORT)"
-	@ALIGNSCORE_MODEL_PATH=$(ALIGNSCORE_MODEL_PATH) \
+	@PYTORCH_ENABLE_MPS_FALLBACK=1 \
+	ALIGNSCORE_MODEL_PATH=$(ALIGNSCORE_MODEL_PATH) \
 	ALIGNSCORE_DEVICE=$(ALIGNSCORE_DEVICE) \
 	ALIGNSCORE_EVAL_MODE=$(ALIGNSCORE_EVAL_MODE) \
 	ALIGNSCORE_BATCH_SIZE=$(ALIGNSCORE_BATCH_SIZE) \
@@ -28,7 +29,8 @@ run: install
 
 dev: install
 	@echo "Running AlignScore service in reload mode at http://$(HOST):$(PORT)"
-	@ALIGNSCORE_MODEL_PATH=$(ALIGNSCORE_MODEL_PATH) \
+	@PYTORCH_ENABLE_MPS_FALLBACK=1 \
+	ALIGNSCORE_MODEL_PATH=$(ALIGNSCORE_MODEL_PATH) \
 	ALIGNSCORE_DEVICE=$(ALIGNSCORE_DEVICE) \
 	ALIGNSCORE_EVAL_MODE=$(ALIGNSCORE_EVAL_MODE) \
 	ALIGNSCORE_BATCH_SIZE=$(ALIGNSCORE_BATCH_SIZE) \
@@ -36,7 +38,7 @@ dev: install
 
 smoke: install
 	@echo "Running AlignScore smoke check"
-	@ALIGNSCORE_MODEL_PATH=$(ALIGNSCORE_MODEL_PATH) $(PY) service/smoke_check.py
+	@PYTORCH_ENABLE_MPS_FALLBACK=1 ALIGNSCORE_MODEL_PATH=$(ALIGNSCORE_MODEL_PATH) $(PY) service/smoke_check.py
 
 spaCy: install
 	@echo "Installing spaCy English model (en_core_web_sm)"
@@ -73,4 +75,3 @@ docker-run:
 	  -p $(PORT):9000 \
 	  -v $$(pwd)/models:/models \
 	  alignscore-service:latest
-
